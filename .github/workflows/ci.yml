@@ -1,0 +1,68 @@
+name: CI
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - "main"
+  pull_request:
+    branches:
+      - "main"
+  release:
+    types: [published]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  PYTHON_VERSION: "3.13"
+jobs:
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - uses: astral-sh/setup-uv@v7
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Install copier
+        run: uv tool install copier
+
+      - name: Run generator
+        id: generator
+        run: |
+          tmpdir=$(mktemp -d)
+          copier copy -r HEAD --force --trust --skip-tasks \
+            -d project_name="Test Project" \
+            -d project_description="Some template description" \
+            -d github_repository="acme/test" \
+            . "$tmpdir"
+          echo "output_dir=$tmpdir/test-project" >> $GITHUB_OUTPUT
+
+      - name: Check generated files
+        run: |
+          OUTPUT_DIR="${{ steps.generator.outputs.output_dir }}"
+          echo "Checking essential files in: $OUTPUT_DIR"
+
+          REQUIRED_FILES=(
+            "Dockerfile"
+            "README.md"
+          )
+
+          MISSING=()
+          for file in "${REQUIRED_FILES[@]}"; do
+            if [ ! -f "$OUTPUT_DIR/$file" ]; then
+              MISSING+=("$file")
+            fi
+          done
+
+          if [ ${#MISSING[@]} -eq 0 ]; then
+            echo "✅ All essential files are present!"
+          else
+            echo "❌ Missing files:"
+            printf '  - %s\n' "${MISSING[@]}"
+            exit 1
+          fi

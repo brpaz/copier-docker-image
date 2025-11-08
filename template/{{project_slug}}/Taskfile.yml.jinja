@@ -1,0 +1,75 @@
+# https://taskfile.dev
+
+version: "3"
+
+vars:
+  IMAGE_NAME: "{{ project_slug }}"
+  IMAGE_TAG: "local-dev"
+  IMAGE_FULL_NAME: "{% raw %}{{.IMAGE_NAME}}:{{.IMAGE_TAG}}{% endraw %}"
+  TRIVY_IMAGE: "aquasec/trivy:0.67.2"
+
+env:
+  DOCKER_BUILDKIT: "1"
+
+tasks:
+  default:
+    cmds:
+      - task -l
+
+  build:
+    desc: "Build the Docker image"
+    cmds:
+      - |
+        {% raw %}
+        BUILD_DATE=$(date -u +'%Y-%m-%dT%H:%M:%SZ')
+        REVISION=$(git rev-parse --short HEAD 2>/dev/null || echo "dev")
+        VERSION=$(git describe --tags --always --dirty 2> /dev/null || echo "dev")
+
+        docker buildx build \
+          --build-arg BUILD_DATE=$BUILD_DATE \
+          --build-arg REVISION=$REVISION \
+          --build-arg VERSION=$VERSION \
+          -t {{ .IMAGE_FULL_NAME }} \
+          --load \
+          .
+        {% endraw %}
+
+  lint:
+    desc: "Run linter"
+    cmds:
+      - hadolint Dockerfile
+
+  test:
+    desc: "Run container structure tests"
+    deps:
+      - build
+    cmds:
+      - container-structure-test test --image {% raw %}{{.IMAGE_NAME}}:{{.IMAGE_TAG}}{% endraw %} --config structure-tests.yaml
+
+  security:
+    desc: "Run container security tests"
+    deps:
+      - build
+    vars:
+      TRIVY_REPORT_PATH: ".trivy/report.html"
+    cmds:
+      - |
+        {% raw %}
+        docker run \
+          -v /var/run/docker.sock:/var/run/docker.sock \
+          -v $(pwd)/.trivy/cache:/root/.cache/ \
+          -v $(pwd):/app \
+          {{ .TRIVY_IMAGE }} \
+          image \
+            --config /app/trivy.yaml \
+            --format template --template "@contrib/html.tpl" \
+            -o /app/{{ .TRIVY_REPORT_PATH }} \
+          {{.IMAGE_FULL_NAME}}
+
+        # Open report file
+        if [[ $(uname) == "Linux" ]]; then
+          xdg-open {{ .TRIVY_REPORT_PATH }}
+        elif [[ $(uname) == "Darwin" ]]; then
+          open {{ .TRIVY_REPORT_PATH }}
+        fi
+        {% endraw %}

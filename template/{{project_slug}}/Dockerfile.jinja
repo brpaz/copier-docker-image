@@ -1,0 +1,18 @@
+FROM --platform=${BUILDPLATFORM} alpine:latest
+
+ARG TARGETPLATFORM
+ARG BUILDPLATFORM
+ARG BUILD_DATE
+ARG REVISION
+ARG VERSION
+
+RUN apk add --no-cache git && git --version
+
+CMD ["sleep", "infinity"]
+
+LABEL org.opencontainers.image.created=$BUILD_DATE \
+    org.opencontainers.image.authors="Bruno Paz" \
+    org.opencontainers.image.description="{{ project_description }}" \
+    org.opencontainers.image.url="{{ project_url }}" \
+    org.opencontainers.image.revision=$REVISION \
+    org.opencontainers.image.version=$VERSION

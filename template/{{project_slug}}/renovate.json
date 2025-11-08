@@ -1,0 +1,14 @@
+{
+    "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+    "extends": [
+        "config:recommended"
+    ],
+    "prHourlyLimit": 5,
+    "prConcurrentLimit": 10,
+    "labels": [
+        "dependencies"
+    ],
+    "reviewers": [
+        "brpaz"
+    ]
+}

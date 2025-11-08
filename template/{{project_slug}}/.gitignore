@@ -1,0 +1,15 @@
+# Security reports
+.trivy
+*.sarif
+
+# Devbox
+.devbox
+# Devenv
+.devenv*
+devenv.local.nix
+
+# direnv
+.direnv
+
+# pre-commit
+.pre-commit-config.yaml
