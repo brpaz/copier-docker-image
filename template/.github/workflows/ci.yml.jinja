@@ -55,7 +55,7 @@ jobs:
             type=semver,pattern={{major}}.{{minor}}
 
       - name: Build test image
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v7
         with:
           context: .
           tags: ${{ env.TEST_IMAGE_TAG }}
@@ -81,7 +81,7 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build final image
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v7
         if: github.event_name != 'pull_request'
         with:
           context: .
