@@ -1,7 +1,9 @@
 {
     "$schema": "https://docs.renovatebot.com/renovate-schema.json",
     "extends": [
-        "config:recommended"
+        "config:recommended",
+        "helpers:pinGitHubActionDigests",
+        "docker:pinDigests"
     ],
     "prHourlyLimit": 5,
     "prConcurrentLimit": 10,
@@ -11,12 +13,6 @@
     "reviewers": [
         "brpaz"
     ],
-    "github-actions": {
-        "pinDigests": true
-    },
-    "docker": {
-        "pinDigests": true
-    },
     "packageRules": [
         {
             "description": "Group and automerge non-major updates",
