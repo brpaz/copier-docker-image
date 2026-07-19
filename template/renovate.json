@@ -10,5 +10,14 @@
     ],
     "reviewers": [
         "brpaz"
+    ],
+    "packageRules": [
+        {
+            "description": "Group and automerge non-major updates",
+            "matchUpdateTypes": ["minor", "patch"],
+            "groupName": "non-major updates",
+            "automerge": true,
+            "platformAutomerge": true
+        }
     ]
 }
