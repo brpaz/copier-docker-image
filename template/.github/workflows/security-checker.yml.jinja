@@ -5,8 +5,9 @@ on:
   workflow_dispatch:
 
 env:
-  TEST_IMAGE_TAG: "my-app:latest"
+  TEST_IMAGE_TAG: "{{ project_slug }}:latest"
 
+{% raw %}
 jobs:
   build:
     name: Trivy scan
@@ -45,3 +46,4 @@ jobs:
               echo "</details>"
             } >> $GITHUB_STEP_SUMMARY
           fi
+{% endraw %}

@@ -1,0 +1,11 @@
+# Trivy configuration
+# See: https://trivy.dev/latest/docs/references/configuration/config-file/
+
+vulnerability:
+  ignore-unfixed: true
+
+report:
+  severity:
+    - CRITICAL
+    - HIGH
+  exit-code: 1
