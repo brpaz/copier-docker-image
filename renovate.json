@@ -10,5 +10,29 @@
     ],
     "reviewers": [
         "brpaz"
+    ],
+    "github-actions": {
+        "managerFilePatterns": [
+            "/(^|/)\\.github/workflows/[^/]+\\.ya?ml$/",
+            "/(^|/)\\.github/workflows/[^/]+\\.ya?ml\\.jinja$/"
+        ]
+    },
+    "dockerfile": {
+        "managerFilePatterns": [
+            "/(^|/)Dockerfile$/",
+            "/(^|/)Dockerfile\\.jinja$/"
+        ]
+    },
+    "packageRules": [
+        {
+            "description": "Group and automerge non-major updates",
+            "matchUpdateTypes": [
+                "minor",
+                "patch"
+            ],
+            "groupName": "non-major updates",
+            "automerge": true,
+            "platformAutomerge": true
+        }
     ]
 }
