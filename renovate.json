@@ -1,38 +1,45 @@
 {
-    "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-    "extends": [
-        "config:recommended"
-    ],
-    "prHourlyLimit": 5,
-    "prConcurrentLimit": 20,
-    "labels": [
-        "dependencies"
-    ],
-    "reviewers": [
-        "brpaz"
-    ],
-    "github-actions": {
-        "managerFilePatterns": [
-            "/(^|/)\\.github/workflows/[^/]+\\.ya?ml$/",
-            "/(^|/)\\.github/workflows/[^/]+\\.ya?ml\\.jinja$/"
-        ]
-    },
-    "dockerfile": {
-        "managerFilePatterns": [
-            "/(^|/)Dockerfile$/",
-            "/(^|/)Dockerfile\\.jinja$/"
-        ]
-    },
-    "packageRules": [
-        {
-            "description": "Group and automerge non-major updates",
-            "matchUpdateTypes": [
-                "minor",
-                "patch"
-            ],
-            "groupName": "non-major updates",
-            "automerge": true,
-            "platformAutomerge": true
-        }
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:recommended"
+  ],
+  "prHourlyLimit": 5,
+  "prConcurrentLimit": 20,
+  "labels": [
+    "dependencies"
+  ],
+  "reviewers": [
+    "brpaz"
+  ],
+  "github-actions": {
+    "managerFilePatterns": [
+      "/(^|/)\\.github/workflows/[^/]+\\.ya?ml$/",
+      "/(^|/)\\.github/workflows/[^/]+\\.ya?ml\\.jinja$/"
     ]
+  },
+  "dockerfile": {
+    "managerFilePatterns": [
+      "/(^|/)Dockerfile$/",
+      "/(^|/)Dockerfile\\.jinja$/"
+    ]
+  },
+  "packageRules": [
+    {
+      "description": "Group and automerge non-major updates",
+      "matchUpdateTypes": [
+        "minor",
+        "patch"
+      ],
+      "groupName": "non-major updates",
+      "automerge": true,
+      "platformAutomerge": true
+    },
+    {
+      "matchManagers": [
+        "github-actions"
+      ],
+      "groupName": "github-actions"
+    }
+  ],
+  "minimumReleaseAge": "3 days"
 }
