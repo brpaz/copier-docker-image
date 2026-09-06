@@ -1,25 +1,23 @@
 {
-    "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-    "extends": [
-        "config:recommended",
-        "helpers:pinGitHubActionDigests",
-        "docker:pinDigests"
-    ],
-    "prHourlyLimit": 5,
-    "prConcurrentLimit": 10,
-    "labels": [
-        "dependencies"
-    ],
-    "reviewers": [
-        "brpaz"
-    ],
-    "packageRules": [
-        {
-            "description": "Group and automerge non-major updates",
-            "matchUpdateTypes": ["minor", "patch"],
-            "groupName": "non-major updates",
-            "automerge": true,
-            "platformAutomerge": true
-        }
-    ]
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:best-practices",
+    ":automergeMinor",
+    ":prConcurrentLimit10"
+  ],
+  "labels": ["dependencies"],
+  "reviewers": ["brpaz"],
+  "minimumReleaseAge": "3 days",
+  "vulnerabilityAlerts": {
+    "enabled": true,
+    "labels": ["security"]
+  },
+  "osvVulnerabilityAlerts": true,
+  "packageRules": [
+    {
+      "matchManagers": ["github-actions"],
+      "matchUpdateTypes": ["minor", "patch"],
+      "groupName": "github actions"
+    }
+  ]
 }
